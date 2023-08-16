@@ -25,7 +25,7 @@ public class StudentRepository {
     public void mapping(String student, String teacher){
         List<String> students = TeacherStudents.getOrDefault(teacher,new ArrayList<>());
         students.add(student);
-        // also add set number of students for teacher
+        // also set number of students for teacher
         Teachers.get(teacher).setNumberOfStudents(students.size());
         TeacherStudents.put(teacher,students);
     }
@@ -45,10 +45,21 @@ public class StudentRepository {
     }
     public void  deleteTeacher(String name){
         Teachers.remove(name);
-        TeacherStudents.remove(name);
+       List<String > students = TeacherStudents.get(name);
+       for (String student : students){
+           Students.remove(student);
+       }
+       TeacherStudents.remove(name);
     }
     public void deleteTeachers(){
         Teachers.clear();
+        for (String name : TeacherStudents.keySet()){
+            List<String> students = TeacherStudents.get(name);
+            for (String student :
+                    students) {
+                Students.remove(student);
+            }
+        }
         TeacherStudents.clear();
     }
 }
